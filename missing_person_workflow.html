@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Missing Person Recognition — Workflow</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --ink:#101828;
+    --paper:#F3F6FB;
+    --line:#0B1E3A;
+    --navy:#0B2A4A;      /* AI core */
+    --navy-tint:#E3EBF5;
+    --teal:#0F6E56;      /* enrollment */
+    --teal-tint:#E1F5EE;
+    --blue:#185FA5;      /* ingestion */
+    --blue-tint:#E6F1FB;
+    --purple:#534AB7;    /* detection */
+    --purple-tint:#EEEDFE;
+    --amber:#B4720C;     /* alerts */
+    --amber-tint:#FBEFDC;
+    --coral:#993C1D;     /* government */
+    --coral-tint:#FAECE7;
+    --gray:#5F5E5A;
+    --gray-tint:#F1EFE8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    padding:28px;
+  }
+  .frame{
+    border:3px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+    max-width:1180px;
+    margin:0 auto;
+    background:#fff;
+  }
+  .title{
+    text-align:center;
+    font-size:34px;
+    font-weight:800;
+    letter-spacing:0.5px;
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:26px;
+    background:linear-gradient(180deg,#fff,#F6F8FC);
+  }
+  .subtitle{
+    text-align:center;
+    font-size:13px;
+    color:#5b6472;
+    margin-top:-18px;
+    margin-bottom:22px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 1.15fr 1fr 1.3fr 1fr;
+    gap:22px;
+    align-items:start;
+  }
+  .col{ display:flex; flex-direction:column; gap:16px; }
+  .group{
+    border-radius:14px;
+    border:2px solid var(--group-c);
+    padding:14px 12px 16px;
+    background:var(--group-t);
+    position:relative;
+  }
+  .group h3{
+    margin:0 0 10px;
+    font-size:13.5px;
+    font-weight:800;
+    color:var(--group-c);
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing:0.3px;
+  }
+  .node{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border:1.5px solid var(--group-c);
+    border-radius:10px;
+    padding:8px 10px;
+    margin-bottom:8px;
+    font-size:12.5px;
+    font-weight:600;
+    line-height:1.25;
+  }
+  .node:last-child{ margin-bottom:0; }
+  .node i{
+    font-size:20px;
+    color:var(--group-c);
+    flex:none;
+  }
+  .flowdown{
+    text-align:center;
+    color:#93a0b3;
+    font-size:20px;
+    margin:2px 0;
+  }
+  .core{
+    grid-row: span 2;
+    background:var(--navy);
+    border:2px solid var(--navy);
+    border-radius:16px;
+    padding:20px 16px;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:14px;
+    min-height:100%;
+  }
+  .core h3{
+    text-align:center;
+    margin:0 0 4px;
+    font-size:15px;
+    letter-spacing:0.4px;
+    color:#BFD3F0;
+    text-transform:uppercase;
+  }
+  .core .node{
+    background:rgba(255,255,255,0.06);
+    border:1.5px solid #33507A;
+    color:#fff;
+  }
+  .core .node i{ color:#7FA8E0; }
+  .db{
+    grid-column: 1 / -1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    border:2px dashed var(--line);
+    border-radius:14px;
+    padding:16px;
+    background:var(--gray-tint);
+    margin-top:6px;
+  }
+  .db i{ font-size:34px; color:var(--navy); }
+  .db .label{ font-weight:800; font-size:15px; }
+  .db .label span{ display:block; font-weight:500; font-size:11.5px; color:#5b6472; margin-top:2px; }
+  .arrowrow{
+    grid-column:1/-1;
+    display:flex;
+    justify-content:center;
+    color:#93a0b3;
+    font-size:22px;
+  }
+  .legend{
+    grid-column:1/-1;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:center;
+    margin-top:8px;
+    font-size:11px;
+    color:#5b6472;
+  }
+  .legend span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="title">Missing Person Recognition — Workflow</div>
+  <div class="subtitle">CCTV feeds are matched in real time against an enrolled reference database, with instant alerts to operators and authorities</div>
+
+  <div class="grid">
+
+    <!-- Column 1: Operator + Enrollment -->
+    <div class="col">
+      <div class="group" style="--group-c:var(--gray); --group-t:var(--gray-tint);">
+        <h3>Operator access</h3>
+        <div class="node"><i class="ti ti-user-shield"></i> Role-based login</div>
+        <div class="node"><i class="ti ti-shield-lock"></i> JWT session token</div>
+      </div>
+      <div class="flowdown">↓</div>
+      <div class="group" style="--group-c:var(--teal); --group-t:var(--teal-tint);">
+        <h3>Enrollment interface</h3>
+        <div class="node"><i class="ti ti-user-plus"></i> Register missing person</div>
+        <div class="node"><i class="ti ti-photo-up"></i> Upload reference photo</div>
+        <div class="node"><i class="ti ti-face-id"></i> RetinaFace detect + align</div>
+        <div class="node"><i class="ti ti-fingerprint"></i> ArcFace embedding (512-d)</div>
+      </div>
+    </div>
+
+    <!-- Column 2: Ingestion + Detection -->
+    <div class="col">
+      <div class="group" style="--group-c:var(--blue); --group-t:var(--blue-tint);">
+        <h3>CCTV ingestion</h3>
+        <div class="node"><i class="ti ti-video"></i> RTSP camera streams</div>
+        <div class="node"><i class="ti ti-stack-2"></i> Threaded frame buffer</div>
+      </div>
+      <div class="flowdown">↓</div>
+      <div class="group" style="--group-c:var(--purple); --group-t:var(--purple-tint);">
+        <h3>Detection engine</h3>
+        <div class="node"><i class="ti ti-scan"></i> YOLOv8-Face detection</div>
+        <div class="node"><i class="ti ti-crop"></i> Face crop per person</div>
+      </div>
+    </div>
+
+    <!-- Column 3: Core AI matching engine -->
+    <div class="core">
+      <h3>AI matching engine</h3>
+      <div class="node"><i class="ti ti-vector-triangle"></i> Generate face vector (ArcFace)</div>
+      <div class="node"><i class="ti ti-database-search"></i> FAISS similarity search</div>
+      <div class="node"><i class="ti ti-percentage"></i> Confidence threshold check</div>
+      <div class="node"><i class="ti ti-alert-triangle"></i> Match &gt; 85% → trigger alert</div>
+    </div>
+
+    <!-- Column 4: Government + Analytics -->
+    <div class="col">
+      <div class="group" style="--group-c:var(--coral); --group-t:var(--coral-tint);">
+        <h3>Authority interface</h3>
+        <div class="node"><i class="ti ti-building-bank"></i> Law enforcement portal</div>
+        <div class="node"><i class="ti ti-bell-ringing"></i> SMS / email dispatch</div>
+      </div>
+      <div class="flowdown">↓</div>
+      <div class="group" style="--group-c:var(--amber); --group-t:var(--amber-tint);">
+        <h3>Monitoring dashboard</h3>
+        <div class="node"><i class="ti ti-layout-grid"></i> Live camera grid</div>
+        <div class="node"><i class="ti ti-photo-search"></i> Match vs. reference view</div>
+        <div class="node"><i class="ti ti-chart-line"></i> Alerts-per-hour analytics</div>
+      </div>
+    </div>
+
+    <div class="arrowrow">↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+
+    <div class="db">
+      <i class="ti ti-database"></i>
+      <div class="label">Central database
+        <span>PostgreSQL (case records) + FAISS vector index (face embeddings)</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><i class="dot" style="background:var(--gray)"></i>Access</span>
+      <span><i class="dot" style="background:var(--teal)"></i>Enrollment</span>
+      <span><i class="dot" style="background:var(--blue)"></i>Ingestion</span>
+      <span><i class="dot" style="background:var(--purple)"></i>Detection</span>
+      <span><i class="dot" style="background:var(--navy)"></i>AI matching core</span>
+      <span><i class="dot" style="background:var(--coral)"></i>Authorities</span>
+      <span><i class="dot" style="background:var(--amber)"></i>Dashboard</span>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

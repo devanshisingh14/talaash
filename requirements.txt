@@ -1,0 +1,11 @@
+opencv-python
+insightface
+onnxruntime
+ultralytics
+faiss-cpu
+numpy
+fastapi
+uvicorn[standard]
+python-multipart
+bcrypt
+pyjwt

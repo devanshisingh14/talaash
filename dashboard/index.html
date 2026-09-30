@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Missing Person Alerts</title>
+<style>
+  body { font-family: sans-serif; background:#0b1220; color:#eee; padding:24px; }
+  h1 { font-size:20px; }
+  #alerts { display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+  .alert { background:#1b2436; border-left:4px solid #e24b4a; padding:12px 16px; border-radius:6px; }
+  .alert b { color:#f09595; }
+  .empty { color:#888; }
+</style>
+</head>
+<body>
+<h1>Live match alerts</h1>
+<div id="alerts"><p class="empty">Waiting for alerts...</p></div>
+
+<script>
+  // Phase 5: opens the same WebSocket the FastAPI backend pushes to,
+  // and renders each alert the instant it arrives -- no polling.
+  const socket = new WebSocket("ws://localhost:8000/ws/alerts");
+  const list = document.getElementById("alerts");
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (list.querySelector(".empty")) list.innerHTML = "";
+
+    const el = document.createElement("div");
+    el.className = "alert";
+    el.innerHTML = `<b>${data.name}</b> matched on ${data.camera}
+      at ${data.time} (similarity ${data.similarity})`;
+    list.prepend(el);
+  };
+
+  socket.onclose = () => {
+    const el = document.createElement("p");
+    el.className = "empty";
+    el.textContent = "Disconnected from alert server.";
+    list.prepend(el);
+  };
+</script>
+</body>
+</html>
