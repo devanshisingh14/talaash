@@ -11,6 +11,7 @@ import HomePage from './HomePage.jsx'
 import AIDetectionPage from './AIDetectionPage.jsx'
 import UsersPage from './UsersPage.jsx'
 import ComingSoon from './ComingSoon.jsx'
+import MapTracking from './MapTracking.jsx'
 
 const ADMIN_NAV = [
   { to: '/admin/home', label: 'Dashboard' },
@@ -45,9 +46,25 @@ function CasesPage() {
 
 function RootRedirect() {
   const { user, token, loading } = useAuth()
-  if (loading) return <p className="empty" style={{ padding: 24 }}>Loading...</p>
-  if (!token || !user) return <Navigate to="/login" replace />
-  return <Navigate to={user.role === 'admin' ? '/admin' : '/officer'} replace />
+
+  if (loading) {
+    return (
+      <p className="empty" style={{ padding: 24 }}>
+        Loading...
+      </p>
+    )
+  }
+
+  if (!token || !user) {
+    return <Navigate to="/login" replace />
+  }
+
+  return (
+    <Navigate
+      to={user.role === 'admin' ? '/admin' : '/officer'}
+      replace
+    />
+  )
 }
 
 export default function App() {
@@ -67,15 +84,49 @@ export default function App() {
             }
           >
             <Route index element={<Navigate to="home" replace />} />
+
             <Route path="home" element={<HomePage />} />
-            <Route path="cases" element={<CasesPage />} />
-            <Route path="live" element={<Dashboard />} />
-            <Route path="ai-detection" element={<AIDetectionPage />} />
-            <Route path="reports" element={<ComingSoon title="Reports Dashboard" />} />
-            <Route path="map" element={<ComingSoon title="Map Tracking Dashboard" />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="analytics" element={<ComingSoon title="Analytics Dashboard" />} />
-            <Route path="profile" element={<ProfilePage />} />
+
+            <Route
+              path="cases"
+              element={<CasesPage />}
+            />
+
+            <Route
+              path="live"
+              element={<Dashboard />}
+            />
+
+            <Route
+              path="ai-detection"
+              element={<AIDetectionPage />}
+            />
+
+            <Route
+              path="reports"
+              element={<ComingSoon title="Reports Dashboard" />}
+            />
+
+            {/* Live Map Tracking */}
+            <Route
+              path="map"
+              element={<MapTracking />}
+            />
+
+            <Route
+              path="users"
+              element={<UsersPage />}
+            />
+
+            <Route
+              path="analytics"
+              element={<ComingSoon title="Analytics Dashboard" />}
+            />
+
+            <Route
+              path="profile"
+              element={<ProfilePage />}
+            />
           </Route>
 
           <Route
@@ -86,14 +137,43 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Navigate to="active-cases" replace />} />
-            <Route path="active-cases" element={<CasesList refreshKey={0} statusFilter="Active" />} />
-            <Route path="alerts" element={<Dashboard />} />
-            <Route path="report" element={<ComingSoon title="Submit Report Dashboard" />} />
-            <Route path="profile" element={<ProfilePage />} />
+            <Route
+              index
+              element={<Navigate to="active-cases" replace />}
+            />
+
+            <Route
+              path="active-cases"
+              element={
+                <CasesList
+                  refreshKey={0}
+                  statusFilter="Active"
+                />
+              }
+            />
+
+            <Route
+              path="alerts"
+              element={<Dashboard />}
+            />
+
+            <Route
+              path="report"
+              element={
+                <ComingSoon title="Submit Report Dashboard" />
+              }
+            />
+
+            <Route
+              path="profile"
+              element={<ProfilePage />}
+            />
           </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
